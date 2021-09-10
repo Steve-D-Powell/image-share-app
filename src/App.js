@@ -6,9 +6,14 @@ import heroImage from "./images/stars.jpg";
 
 function App() {
   const [imageOfTheDay, setImageOfTheDay] = useState({ url: heroImage });
-  const [marsImages, setMarsImages] = useState("unloaded");
+  const [galleryUrl, setGalleryUrl] = useState(
+    "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=KnTfeP68Y6KMuMuhCMWSxjlYXsqjgoCWUo8chunG"
+  );
+  const [headerIsLoaded, setHeaderIsLoaded] = useState(false);
+  const [galleryIsLoaded, setGalleryIsLoaded] = useState(false);
 
   useEffect(() => {
+    console.log("Ran a update in App");
     async function getImageOfTheDay() {
       try {
         const response = await fetch(
@@ -22,38 +27,41 @@ function App() {
         console.log(err);
       }
     }
-
-    async function getMarsRoverImages() {
-      try {
-        const response = await fetch(
-          "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=KnTfeP68Y6KMuMuhCMWSxjlYXsqjgoCWUo8chunG&page=1"
-        );
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        return await response.json();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
     getImageOfTheDay().then((data) => {
       if (data !== undefined) {
         setImageOfTheDay(data);
-      }
-    });
-
-    getMarsRoverImages().then((data) => {
-      if (data !== undefined) {
-        setMarsImages(data.photos);
+        setHeaderIsLoaded(true);
       }
     });
   }, []);
 
+  useEffect(() => {
+    if (headerIsLoaded && galleryIsLoaded) {
+      setTimeout(() => {
+        document
+          .querySelector(".loading-screen--container")
+          .classList.add("hide");
+        document.querySelector("body").style.overflow = "scroll";
+      }, 1000);
+    }
+  }, [headerIsLoaded, galleryIsLoaded]);
+
+  const checkGalleryLoading = () => {
+    setGalleryIsLoaded(true);
+  };
+
+  const changeGalleryUrl = (url) => {
+    setGalleryUrl(url);
+  };
+
   return (
     <div className="App">
       <Header imageOfTheDay={imageOfTheDay} />
-      <Gallery marsImages={marsImages} />
+      <Gallery
+        galleryUrl={galleryUrl}
+        checkGalleryLoading={checkGalleryLoading}
+        changeGalleryUrl={changeGalleryUrl}
+      />
     </div>
   );
 }
