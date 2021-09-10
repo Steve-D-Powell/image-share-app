@@ -1,4 +1,3 @@
-import React from "react";
 import "../css/Header.css";
 import NasaLogo from "../images/nasa-logo.png";
 
@@ -17,7 +16,11 @@ const Header = (props) => {
     <header className="App-header">
       <div className="header-hero" style={styles.headerHero}>
         <div className="header-hero--text-container">
-          <img className="header-hero--text-container_logo" src={NasaLogo} />
+          <img
+            className="header-hero--text-container_logo"
+            src={NasaLogo}
+            alt="Nasa Logo"
+          />
           <div className="header-hero--text_text">
             <span>Images From Space</span>
           </div>
