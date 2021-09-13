@@ -1,74 +1,28 @@
 import "../css/Gallery.css";
 import GalleryImage from "./GaleryImage";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import Pagination from "react-pagination-js";
 import "react-pagination-js/dist/styles.css";
 import Select from "./Select";
+import { SRLWrapper } from "simple-react-lightbox-pro";
+import { useParams } from "react-router-dom";
+import Loading from "./Loading";
+import axios from "axios";
 
-const Gallery = ({ galleryUrl, checkGalleryLoading, changeGalleryUrl }) => {
-  const [galleryImages, setGalleryImages] = useState([]);
-  const [currentImages, setCurrentImages] = useState([]);
-  const [totalImages, setTotalImages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sizePerPage, setSizePerPage] = useState(10);
-
-  useEffect(() => {
-    console.log("Updated the Gallery");
-    console.log("URL", galleryUrl);
-    async function getTotalImages() {
-      try {
-        const response = await fetch(galleryUrl);
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        return await response.json();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    getTotalImages().then((data) => {
-      if (data !== undefined) {
-        let images = data.photos ? data.photos : data;
-        console.log("images", images);
-
-        setTotalImages(images.length);
-        setGalleryImages(images);
-        setCurrentImages(images.slice(0, 10));
-      }
-    });
-  }, [galleryUrl]);
-
-  useEffect(() => {
-    console.log("Reloaded the Gallery");
-
-    const updateImages = () => {
-      const startImg = (currentPage - 1) * sizePerPage;
-      const endImg = startImg + sizePerPage;
-
-      setCurrentImages(galleryImages.slice(startImg, endImg));
-      console.log("Finished Reloading");
-    };
-    updateImages();
-  }, [currentPage, sizePerPage, galleryImages]);
-
-  useEffect(() => {
-    if (galleryImages.length > 0) {
-      checkGalleryLoading();
-    }
-  }, [galleryImages, checkGalleryLoading]);
-
-  const selectNumImages = (num) => {
-    setSizePerPage(parseInt(num));
-  };
-
-  const changeCurrentPage = (numPage) => {
-    setCurrentPage(numPage);
-  };
-
-  if (currentImages === "unloaded") {
-    return <div>No Images Found</div>;
-  }
-
+const Gallery = ({ galleryUrls }) => {
+  console.log("Gallery Rendered");
+  const params = useParams();
+  const chosenGallery = galleryUrls[params.gallery.replace("-", "_")];
+  const [galleryUrl, setGalleryUrl] = useState(chosenGallery);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [galleryState, setGalleryState] = useReducer(
+    (galleryState, newState) => ({ ...galleryState, ...newState }),
+    { images: [], current: [], total: 0 }
+  );
+  const [paginateState, setPaginateState] = useReducer(
+    (paginateState, newState) => ({ ...paginateState, ...newState }),
+    { page: 1, size: 10 }
+  );
   const numberofImages = [
     {
       name: "10 Images",
@@ -92,39 +46,103 @@ const Gallery = ({ galleryUrl, checkGalleryLoading, changeGalleryUrl }) => {
     },
   ];
 
-  const galleryUrls = [
-    {
-      name: "Mars Rover",
-      value:
-        "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=KnTfeP68Y6KMuMuhCMWSxjlYXsqjgoCWUo8chunG",
-    },
-    {
-      name: "APOD - 2021",
-      value:
-        "https://api.nasa.gov/planetary/apod?api_key=KnTfeP68Y6KMuMuhCMWSxjlYXsqjgoCWUo8chunG&start_date=2021-09-01",
-    },
-  ];
+  useEffect(() => {}, []);
 
-  const selectImgUrl = (url) => {
-    setGalleryImages([]);
-    changeGalleryUrl(url);
+  useEffect(() => {
+    if (!isLoaded) {
+      console.log("Updated the Gallery");
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      async function getTotalImages() {
+        try {
+          const response = await fetch(galleryUrl);
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return await response.json();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      getTotalImages().then((data) => {
+        if (data !== undefined) {
+          let allImages = data.photos ? data.photos : data;
+          const startImg = (paginateState.page - 1) * paginateState.size;
+          const endImg = startImg + paginateState.size;
+          const currentImages = allImages.slice(startImg, endImg);
+
+          setGalleryState({
+            images: allImages,
+            current: currentImages,
+            total: allImages.length,
+          });
+          setIsLoaded(true);
+        }
+      });
+    }
+  }, [galleryUrl, isLoaded, paginateState, chosenGallery]);
+
+  useEffect(() => {
+    if (isLoaded) {
+      setTimeout(() => {
+        document.querySelector(".gallery-container").classList.remove("hide");
+        document
+          .querySelector(".gallery-pagination-controls--container")
+          .classList.remove("hide");
+      }, 500);
+    } else {
+      document.querySelector(".gallery-container").classList.add("hide");
+      document
+        .querySelector(".gallery-pagination-controls--container")
+        .classList.add("hide");
+    }
+  }, [isLoaded]);
+
+  const updateImages = (page, size) => {
+    const startImg = (page - 1) * size;
+    const endImg = startImg + size;
+
+    setGalleryState({ current: galleryState.images.slice(startImg, endImg) });
   };
+
+  const selectNumImages = (size) => {
+    setPaginateState({ size: parseInt(size) });
+    updateImages(paginateState.page, parseInt(size));
+  };
+
+  const changeCurrentPage = (page) => {
+    setPaginateState({ page: page });
+    updateImages(page, paginateState.size);
+  };
+
+  const checkGalleryUrl = () => {
+    if (galleryUrl !== chosenGallery) {
+      setGalleryUrl(chosenGallery);
+      setIsLoaded(false);
+    }
+  };
+  checkGalleryUrl();
+
+  if (galleryState.current === "unloaded") {
+    return <div>No Images Found</div>;
+  }
 
   return (
     <>
       <Select onChange={selectNumImages} values={numberofImages} />
-      <Select onChange={selectImgUrl} values={galleryUrls} />
-      <div className="grid-container">
-        {currentImages.map((image, index) => (
-          <GalleryImage key={index} index={index} imageObj={image} />
-        ))}
+      {isLoaded ? <Loading isLoading={"hide"} /> : <Loading isLoading={""} />}
+      <div className="gallery-container grid-container hide">
+        <SRLWrapper>
+          {galleryState.current.map((image, index) => (
+            <GalleryImage key={index} index={index} imageObj={image} />
+          ))}
+        </SRLWrapper>
       </div>
-      <div className="pagination-controls--container">
+      <div className="gallery-pagination-controls--container hide">
         <Pagination
-          currentPage={currentPage}
+          currentPage={paginateState.page}
           changeCurrentPage={changeCurrentPage}
-          totalSize={totalImages}
-          sizePerPage={sizePerPage}
+          totalSize={galleryState.total}
+          sizePerPage={paginateState.size}
           theme="dark"
         />
       </div>

@@ -4,11 +4,20 @@ import "./index.css";
 import App from "./App";
 import LoadingScreen from "./components/LoadingScreen";
 import reportWebVitals from "./reportWebVitals";
+import SimpleReactLightbox from "simple-react-lightbox-pro";
+
+function WrappedApp() {
+  return (
+    <SimpleReactLightbox>
+      <App />
+    </SimpleReactLightbox>
+  );
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <LoadingScreen />
-    <App />
+    <WrappedApp />
   </React.StrictMode>,
   document.getElementById("root")
 );
