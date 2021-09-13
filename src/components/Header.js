@@ -1,12 +1,49 @@
+import React, { useState, useEffect } from "react";
 import "../css/Header.css";
-import NasaLogo from "../images/nasa-logo.png";
 
 const Header = (props) => {
-  const imageUrl = props.imageOfTheDay.url;
+  const [imageOfTheDay, setImageOfTheDay] = useState({
+    url: "/images/stars.jpg",
+  });
+  const [headerIsLoaded, setHeaderIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (headerIsLoaded) {
+      setTimeout(() => {
+        document
+          .querySelector(".loading-screen--container")
+          .classList.add("hide");
+        document.querySelector("body").style.overflow = "scroll";
+      }, 1000);
+    }
+  }, [headerIsLoaded]);
+
+  useEffect(() => {
+    console.log("Updated the Header Image");
+    async function getImageOfTheDay() {
+      try {
+        const response = await fetch(
+          "https://api.nasa.gov/planetary/apod?api_key=KnTfeP68Y6KMuMuhCMWSxjlYXsqjgoCWUo8chunG"
+        );
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return await response.json();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getImageOfTheDay().then((data) => {
+      if (data !== undefined) {
+        setImageOfTheDay(data);
+        setHeaderIsLoaded(true);
+      }
+    });
+  }, []);
 
   const styles = {
     headerHero: {
-      backgroundImage: `url(${imageUrl}`,
+      backgroundImage: `url(${imageOfTheDay.url}`,
       backgroundSize: "cover",
       backgroundPosition: "center",
     },
@@ -18,7 +55,7 @@ const Header = (props) => {
         <div className="header-hero--text-container">
           <img
             className="header-hero--text-container_logo"
-            src={NasaLogo}
+            src="/images/nasa-logo.png"
             alt="Nasa Logo"
           />
           <div className="header-hero--text_text">
@@ -30,7 +67,7 @@ const Header = (props) => {
         </div>
         <div className="header-hero--text-container_note">
           <span>
-            {props.imageOfTheDay.title} - {props.imageOfTheDay.date}
+            {imageOfTheDay.title} - {imageOfTheDay.date}
           </span>
         </div>
       </div>

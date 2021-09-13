@@ -54,7 +54,7 @@
   z-index: 1;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
   .header-hero {
     min-width: 90%;
   }
@@ -86,5 +86,11 @@
 @media only screen and (min-width: 768px) {
   .header-hero--text_text {
     line-height: 1;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .header-hero--text_text {
+    font-size: 1.7rem;
   }
 }

@@ -1,12 +1,12 @@
 .grid-container {
-  columns: 5 200px;
-  column-gap: 1.5rem;
+  columns: 3 200px;
+  column-gap: 0.5rem;
   width: 80%;
   margin: 20px auto;
 }
 .grid-container .gallery-image-container {
   width: 150px;
-  margin: 0 1.5rem 1.5rem 0;
+  margin: 0 0.5rem 0 0;
   display: inline-block;
   width: 100%;
   border-radius: 5px;
@@ -41,6 +41,12 @@
   position: relative;
 }
 
-.pagination-controls--container {
-  padding: 15px 0;
+.gallery-pagination-controls--container {
+  padding: 30px 0;
+}
+
+@media only screen and (max-width: 425px) {
+  .grid-container .gallery-image-container {
+    margin: 0 0.5rem 0.8rem 0;
+  }
 }
