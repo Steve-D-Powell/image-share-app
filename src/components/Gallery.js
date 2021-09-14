@@ -7,14 +7,14 @@ import Select from "./Select";
 import { SRLWrapper } from "simple-react-lightbox-pro";
 import { useParams } from "react-router-dom";
 import Loading from "./Loading";
-import axios from "axios";
 
-const Gallery = ({ galleryUrls }) => {
+const Gallery = ({ galleryUrls, updateLikedPics, likedIds }) => {
   console.log("Gallery Rendered");
   const params = useParams();
   const chosenGallery = galleryUrls[params.gallery.replace("-", "_")];
-  const [galleryUrl, setGalleryUrl] = useState(chosenGallery);
+  const [galleryUrl, setGalleryUrl] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hqImage, setHqImage] = useState(false);
   const [galleryState, setGalleryState] = useReducer(
     (galleryState, newState) => ({ ...galleryState, ...newState }),
     { images: [], current: [], total: 0 }
@@ -46,10 +46,8 @@ const Gallery = ({ galleryUrls }) => {
     },
   ];
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
-    if (!isLoaded) {
+    if (!isLoaded && Object.keys(galleryUrl).length) {
       console.log("Updated the Gallery");
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
       async function getTotalImages() {
@@ -126,14 +124,57 @@ const Gallery = ({ galleryUrls }) => {
     return <div>No Images Found</div>;
   }
 
+  const highQualityImages = (e) => {
+    setHqImage(e.target.checked);
+  };
+
+  const likeImage = (event) => {
+    const target = event.target.closest(".gallery-image");
+    const image = {
+      id: target.dataset.mediaId,
+      src: target.dataset.mediaSrc,
+      title: target.dataset.mediaTitle,
+      date: target.dataset.mediaDate,
+    };
+    updateLikedPics(image, event.target.checked);
+  };
+
   return (
     <>
       <Select onChange={selectNumImages} values={numberofImages} />
-      {isLoaded ? <Loading isLoading={"hide"} /> : <Loading isLoading={""} />}
+      <label htmlFor="High-quality-images">
+        High Quality Images (Loads slower)
+        <input
+          type="checkbox"
+          id="High-quality-images"
+          className="HD-selector"
+          onChange={highQualityImages}
+        />
+      </label>
+      {isLoaded || Object.keys(galleryUrl).length === 0 ? (
+        <Loading isLoading={"hide"} />
+      ) : (
+        <Loading isLoading={""} />
+      )}
+      <div>
+        {Object.keys(galleryUrl).length === 0 ? (
+          <div>
+            <span>You like nothing...</span>
+          </div>
+        ) : (
+          <span></span>
+        )}
+      </div>
       <div className="gallery-container grid-container hide">
         <SRLWrapper>
           {galleryState.current.map((image, index) => (
-            <GalleryImage key={index} index={index} imageObj={image} />
+            <GalleryImage
+              key={index}
+              likeImage={likeImage}
+              imageObj={image}
+              highqtyImage={hqImage}
+              likedIds={likedIds}
+            />
           ))}
         </SRLWrapper>
       </div>

@@ -8,6 +8,11 @@
   src: url("./fonts/MinecartLCD.ttf") format("truetype");
 }
 
+:root {
+  --space-font: OuterLimits;
+  --digital-font: MineCart;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
