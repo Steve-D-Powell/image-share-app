@@ -4,36 +4,28 @@ we can keep the module scoped variable going, and only set to a state variable w
 */
 
 import "./css/App.css";
+import { useState } from "react";
 import Header from "./components/Header";
 import Gallery from "./components/Gallery";
 import Navigation from "./components/Navigation";
 import Home from "./components/Home";
 import { Route, HashRouter, Switch } from "react-router-dom";
 
-let favGallery = [];
-let likedIds = [];
-
 function App() {
+  const [faveGallery, setFaveGallery] = useState([]);
+  const [faveIds, setFaveIds] = useState([]);
   const galleryUrls = {
     mars_rover:
       "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=KnTfeP68Y6KMuMuhCMWSxjlYXsqjgoCWUo8chunG",
     apod: "https://api.nasa.gov/planetary/apod?api_key=KnTfeP68Y6KMuMuhCMWSxjlYXsqjgoCWUo8chunG&start_date=2021-01-01",
     lucky:
       "https://api.nasa.gov/planetary/apod?api_key=KnTfeP68Y6KMuMuhCMWSxjlYXsqjgoCWUo8chunG&count=50",
-    loved: favGallery,
+    loved: "",
   };
 
-  const updateLikedPics = (obj, checked) => {
-    if (checked) {
-      favGallery = [...favGallery, obj];
-      likedIds = [...likedIds, obj.id];
-    } else {
-      console.log("Uncheck");
-      favGallery = favGallery.filter((image) => image.id === obj.id);
-      likedIds = likedIds.filter((id) => id === obj.id);
-    }
-    console.log("Liked Images", favGallery);
-    console.log("Liked Ids", likedIds);
+  const updateFaveState = (gallery, ids) => {
+    setFaveGallery(gallery);
+    setFaveIds(ids);
   };
 
   const links = [
@@ -49,7 +41,12 @@ function App() {
       path: "/gallery/:gallery",
       name: "Mars Rover",
       component: (
-        <Gallery galleryUrls={galleryUrls} updateLikedPics={updateLikedPics} />
+        <Gallery
+          galleryUrls={galleryUrls}
+          updateFaveState={updateFaveState}
+          faveGallery={faveGallery}
+          faveIds={faveIds}
+        />
       ),
       exact: false,
     },
@@ -58,7 +55,7 @@ function App() {
       path: "/gallery/:gallery",
       name: "APOD",
       component: (
-        <Gallery galleryUrls={galleryUrls} updateLikedPics={updateLikedPics} />
+        <Gallery galleryUrls={galleryUrls} updateFaveState={updateFaveState} />
       ),
       exact: false,
     },
@@ -67,7 +64,7 @@ function App() {
       path: "/gallery/:gallery",
       name: "Feeling Lucky",
       component: (
-        <Gallery galleryUrls={galleryUrls} updateLikedPics={updateLikedPics} />
+        <Gallery galleryUrls={galleryUrls} updateFaveState={updateFaveState} />
       ),
       exact: false,
     },
@@ -76,11 +73,7 @@ function App() {
       path: "/gallery/:gallery",
       name: "Loved Pics",
       component: (
-        <Gallery
-          galleryUrls={galleryUrls}
-          updateLikedPics={updateLikedPics}
-          likedIds={likedIds}
-        />
+        <Gallery galleryUrls={galleryUrls} updateFaveState={updateFaveState} />
       ),
       exact: false,
     },

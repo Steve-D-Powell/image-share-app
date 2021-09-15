@@ -8,13 +8,14 @@ import { SRLWrapper } from "simple-react-lightbox-pro";
 import { useParams } from "react-router-dom";
 import Loading from "./Loading";
 
-const Gallery = ({ galleryUrls, updateLikedPics, likedIds }) => {
+const Gallery = ({ galleryUrls, updateFaveState, faveGallery, faveIds }) => {
   console.log("Gallery Rendered");
   const params = useParams();
   const chosenGallery = galleryUrls[params.gallery.replace("-", "_")];
   const [galleryUrl, setGalleryUrl] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [hqImage, setHqImage] = useState(false);
+
   const [galleryState, setGalleryState] = useReducer(
     (galleryState, newState) => ({ ...galleryState, ...newState }),
     { images: [], current: [], total: 0 }
@@ -47,40 +48,63 @@ const Gallery = ({ galleryUrls, updateLikedPics, likedIds }) => {
   ];
 
   useEffect(() => {
-    if (!isLoaded && Object.keys(galleryUrl).length) {
-      console.log("Updated the Gallery");
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-      async function getTotalImages() {
-        try {
-          const response = await fetch(galleryUrl);
-          if (!response.ok) {
-            throw new Error(response.statusText);
-          }
-          return await response.json();
-        } catch (err) {
-          console.log(err);
-        }
-      }
-      getTotalImages().then((data) => {
-        if (data !== undefined) {
-          let allImages = data.photos ? data.photos : data;
-          const startImg = (paginateState.page - 1) * paginateState.size;
-          const endImg = startImg + paginateState.size;
-          const currentImages = allImages.slice(startImg, endImg);
-
-          setGalleryState({
-            images: allImages,
-            current: currentImages,
-            total: allImages.length,
-          });
-          setIsLoaded(true);
-        }
-      });
-    }
-  }, [galleryUrl, isLoaded, paginateState, chosenGallery]);
+    setGalleryState({
+      images: [],
+      current: [],
+      total: 0,
+    });
+  }, [chosenGallery]);
 
   useEffect(() => {
-    if (isLoaded) {
+    console.log("API useEffect Ran");
+    const galleryUpdate = (allImages) => {
+      const startImg = (paginateState.page - 1) * paginateState.size;
+      const endImg = startImg + paginateState.size;
+      const currentImages = allImages.slice(startImg, endImg);
+
+      setGalleryState({
+        images: allImages,
+        current: currentImages,
+        total: allImages.length,
+      });
+    };
+
+    if (!isLoaded) {
+      setIsLoaded(true);
+      console.log("Fetching", galleryUrl);
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      if (params.gallery === "loved" && faveGallery.length) {
+        galleryUpdate(faveGallery);
+      } else if (galleryUrl !== "") {
+        async function getTotalImages() {
+          try {
+            const response = await fetch(galleryUrl);
+            if (!response.ok) {
+              throw new Error(response.statusText);
+            }
+            return await response.json();
+          } catch (err) {
+            console.log(err);
+          }
+        }
+        getTotalImages().then((data) => {
+          if (data !== undefined) {
+            galleryUpdate(data.photos ? data.photos : data);
+          }
+        });
+      }
+    }
+  }, [
+    galleryUrl,
+    isLoaded,
+    paginateState,
+    galleryState,
+    faveGallery,
+    params.gallery,
+  ]);
+
+  useEffect(() => {
+    if (galleryState.total > 0) {
       setTimeout(() => {
         document.querySelector(".gallery-container").classList.remove("hide");
         document
@@ -93,7 +117,7 @@ const Gallery = ({ galleryUrls, updateLikedPics, likedIds }) => {
         .querySelector(".gallery-pagination-controls--container")
         .classList.add("hide");
     }
-  }, [isLoaded]);
+  }, [galleryState]);
 
   const updateImages = (page, size) => {
     const startImg = (page - 1) * size;
@@ -112,6 +136,35 @@ const Gallery = ({ galleryUrls, updateLikedPics, likedIds }) => {
     updateImages(page, paginateState.size);
   };
 
+  const highQualityImages = (e) => {
+    setHqImage(e.target.checked);
+  };
+
+  const likeImageClickHandler = (event) => {
+    const imageEl = event.target.closest(".gallery-image");
+
+    const image = {
+      id: imageEl.dataset.mediaId,
+      src: imageEl.dataset.mediaSrc,
+      title: imageEl.dataset.mediaTitle,
+      date: imageEl.dataset.mediaDate,
+      media_type: imageEl.dataset.mediaType,
+    };
+
+    if (event.target.checked) {
+      updateFaveState([...faveGallery, image], [...faveIds, image.id]);
+    } else {
+      if (galleryState.total === 1) {
+        setGalleryState({ total: 0 });
+      }
+      setIsLoaded(false);
+      updateFaveState(
+        faveGallery.filter((currentImg) => currentImg.id !== image.id),
+        faveIds.filter((id) => id !== image.id)
+      );
+    }
+  };
+
   const checkGalleryUrl = () => {
     if (galleryUrl !== chosenGallery) {
       setGalleryUrl(chosenGallery);
@@ -120,30 +173,46 @@ const Gallery = ({ galleryUrls, updateLikedPics, likedIds }) => {
   };
   checkGalleryUrl();
 
-  if (galleryState.current === "unloaded") {
-    return <div>No Images Found</div>;
-  }
-
-  const highQualityImages = (e) => {
-    setHqImage(e.target.checked);
+  const readyToRender = () => {
+    if (isLoaded) {
+      return (
+        <SRLWrapper>
+          {galleryState.current.map((image, index) => (
+            <GalleryImage
+              key={index}
+              likeImageClickHandler={likeImageClickHandler}
+              imageObj={image}
+              highqtyImage={hqImage}
+              faveIds={faveIds}
+              galleryName={params.gallery}
+            />
+          ))}
+        </SRLWrapper>
+      );
+    }
   };
 
-  const likeImage = (event) => {
-    const target = event.target.closest(".gallery-image");
-    const image = {
-      id: target.dataset.mediaId,
-      src: target.dataset.mediaSrc,
-      title: target.dataset.mediaTitle,
-      date: target.dataset.mediaDate,
-    };
-    updateLikedPics(image, event.target.checked);
+  const checkIfEmpty = () => {
+    if (galleryState.total === 0) {
+      if (params.gallery === "loved") {
+        return (
+          <div>
+            <span>Nothing to see here...</span>
+          </div>
+        );
+      } else {
+        return <Loading isLoading={""} />;
+      }
+    } else {
+      return <Loading isLoading={"hide"} />;
+    }
   };
 
   return (
     <>
       <Select onChange={selectNumImages} values={numberofImages} />
       <label htmlFor="High-quality-images">
-        High Quality Images (Loads slower)
+        High Quality Images if available (Loads slower)
         <input
           type="checkbox"
           id="High-quality-images"
@@ -151,32 +220,9 @@ const Gallery = ({ galleryUrls, updateLikedPics, likedIds }) => {
           onChange={highQualityImages}
         />
       </label>
-      {isLoaded || Object.keys(galleryUrl).length === 0 ? (
-        <Loading isLoading={"hide"} />
-      ) : (
-        <Loading isLoading={""} />
-      )}
-      <div>
-        {Object.keys(galleryUrl).length === 0 ? (
-          <div>
-            <span>You like nothing...</span>
-          </div>
-        ) : (
-          <span></span>
-        )}
-      </div>
+      {checkIfEmpty()}
       <div className="gallery-container grid-container hide">
-        <SRLWrapper>
-          {galleryState.current.map((image, index) => (
-            <GalleryImage
-              key={index}
-              likeImage={likeImage}
-              imageObj={image}
-              highqtyImage={hqImage}
-              likedIds={likedIds}
-            />
-          ))}
-        </SRLWrapper>
+        {readyToRender()}
       </div>
       <div className="gallery-pagination-controls--container hide">
         <Pagination

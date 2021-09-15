@@ -19,7 +19,6 @@ const Header = (props) => {
   }, [headerIsLoaded]);
 
   useEffect(() => {
-    console.log("Updated the Header Image");
     async function getImageOfTheDay() {
       try {
         const response = await fetch(
