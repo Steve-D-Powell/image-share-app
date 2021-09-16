@@ -9,6 +9,7 @@ import SimpleReactLightbox from "simple-react-lightbox-pro";
 function WrappedApp() {
   return (
     <SimpleReactLightbox>
+      <LoadingScreen />
       <App />
     </SimpleReactLightbox>
   );
@@ -16,7 +17,6 @@ function WrappedApp() {
 
 ReactDOM.render(
   <React.StrictMode>
-    <LoadingScreen />
     <WrappedApp />
   </React.StrictMode>,
   document.getElementById("root")
