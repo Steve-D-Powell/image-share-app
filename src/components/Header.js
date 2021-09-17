@@ -34,7 +34,9 @@ const Header = (props) => {
     }
     getImageOfTheDay().then((data) => {
       if (data !== undefined) {
-        setImageOfTheDay(data);
+        if (data.media_type !== "video") {
+          setImageOfTheDay(data);
+        }
         setHeaderIsLoaded(true);
       }
     });

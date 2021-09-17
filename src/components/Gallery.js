@@ -1,5 +1,6 @@
 import "../css/Gallery.css";
 import ReadyToRender from "./ReadyToRender";
+import SlideToggle from "./SlideToggle";
 import { useState, useEffect, useReducer } from "react";
 import useLocalStorageState from "../hooks/localStorageState";
 import Pagination from "react-pagination-js";
@@ -133,22 +134,6 @@ const Gallery = () => {
     }
   };
 
-  const showHiQualityOption = () => {
-    if (hasHiQualityImages.includes(params.gallery)) {
-      return (
-        <label htmlFor="High-quality-images">
-          High Quality Images if available (Loads slower)
-          <input
-            type="checkbox"
-            id="High-quality-images"
-            className="HD-selector"
-            onChange={highQualityImages}
-          />
-        </label>
-      );
-    }
-  };
-
   const showLoadingAnimation = () => {
     if (showLoading.includes(params.gallery)) {
       return <Loading />;
@@ -167,22 +152,32 @@ const Gallery = () => {
 
   return (
     <>
-      <Select onChange={selectNumImages} values={numberofImages} />
-      {showHiQualityOption()}
+      <div className="filters-container">
+        <Select onChange={selectNumImages} values={numberofImages} />
+        {hasHiQualityImages.includes(params.gallery) && (
+          <SlideToggle
+            lText="Low"
+            rText="High"
+            eventHandler={highQualityImages}
+          />
+        )}
+      </div>
       {checkIfEmpty()}
-      {showLoadingAnimation()}
-      <div className="gallery-container grid-container hide">
-        <ReadyToRender
-          galleryUrl={galleryUrl}
-          chosenGallery={chosenGallery}
-          galleryName={params.gallery}
-          hqImage={hqImage}
-          updateFave={updateFave}
-          faveGallery={faveGallery}
-          faveIds={faveIds}
-          currentGallery={galleryState.current}
-          setGalleryUrl={setGalleryUrl}
-        />
+      <div className="gallery-container grid-container">
+        {showLoadingAnimation()}
+        <div className="gallery-images-wrapper">
+          <ReadyToRender
+            galleryUrl={galleryUrl}
+            chosenGallery={chosenGallery}
+            galleryName={params.gallery}
+            hqImage={hqImage}
+            updateFave={updateFave}
+            faveGallery={faveGallery}
+            faveIds={faveIds}
+            currentGallery={galleryState.current}
+            setGalleryUrl={setGalleryUrl}
+          />
+        </div>
       </div>
       <div className="gallery-pagination-controls--container hide">
         <Pagination

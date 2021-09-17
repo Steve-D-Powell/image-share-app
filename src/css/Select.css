@@ -1,7 +1,5 @@
 .images-selecter--container {
-  width: 80%;
   display: flex;
-  margin: 15px auto;
 }
 .images-selecter--select {
   -webkit-appearance: none;

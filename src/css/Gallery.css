@@ -1,3 +1,10 @@
+.filters-container {
+  display: flex;
+  width: 80%;
+  margin: 45px auto;
+  justify-content: space-between;
+}
+
 .grid-container {
   columns: 3 200px;
   column-gap: 0.5rem;
@@ -40,10 +47,6 @@
 }
 .gallery-image {
   position: relative;
-}
-
-.gallery-pagination-controls--container {
-  padding: 30px 0;
 }
 
 @media only screen and (max-width: 425px) {

@@ -25,29 +25,31 @@ client.get = function (endpoint, customConfig = {}) {
 
 export function galleryIsLoaded() {
   const loadingNode = document.querySelector(".gallery-loading-container");
-
+  if (loadingNode) {
+    loadingNode.addEventListener("transitionend", () => {
+      console.log("After");
+      loadingNode.style.display = "none";
+    });
+  }
   setTimeout(() => {
     if (loadingNode) {
-      document
-        .querySelector(".gallery-loading-container")
-        .classList.add("hide");
+      loadingNode.classList.add("ghost");
     }
-    document.querySelector(".gallery-container").classList.remove("hide");
+    document.querySelector(".gallery-images-wrapper").classList.remove("hide");
     document
       .querySelector(".gallery-pagination-controls--container")
       .classList.remove("hide");
-  }, 500);
+  }, 1500);
 }
 
 export function galleryNotLoaded() {
   const loadingNode = document.querySelector(".gallery-loading-container");
 
   if (loadingNode) {
-    document
-      .querySelector(".gallery-loading-container")
-      .classList.remove("hide");
+    loadingNode.style.display = "block";
+    loadingNode.classList.remove("ghost");
   }
-  document.querySelector(".gallery-container").classList.add("hide");
+  document.querySelector(".gallery-images-wrapper").classList.add("hide");
   document
     .querySelector(".gallery-pagination-controls--container")
     .classList.add("hide");

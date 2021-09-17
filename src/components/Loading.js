@@ -2,7 +2,7 @@ import "../css/Loader.css";
 
 const Loading = ({ isLoading }) => {
   return (
-    <div className={`gallery-loading-container ${isLoading}`}>
+    <div className="gallery-loading-container">
       <div className="overlay">
         <span className="loader">
           <span className="loader__rocket">

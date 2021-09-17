@@ -31,3 +31,7 @@ code {
 .hide {
   display: none;
 }
+
+.ghost {
+  opacity: 0;
+}
