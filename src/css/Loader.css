@@ -1,5 +1,20 @@
+.gallery-pagination-controls--container {
+  padding: 30px 0;
+}
+
 .gallery-loading-container {
-  padding: 100px 0;
+  position: absolute;
+  width: 81%;
+  transition: all 1s;
+  padding: 0;
+}
+
+@media only screen and (min-width: 768px) {
+  .gallery-loading-container {
+    width: 81%;
+    background-color: #f0f0f0;
+    z-index: 2;
+  }
 }
 
 .loading-text {

@@ -1,0 +1,85 @@
+import LikeHeart from "./LikeHeart";
+import {
+  createMarsImage,
+  createApodImage,
+  createDefaultImage,
+} from "../functions/createImages";
+
+const Img = ({ image }) => {
+  return (
+    <a href={image.src}>
+      <img
+        className="grid-item"
+        src={image.src}
+        alt={`${image.title}-${image.date}`}
+      />
+    </a>
+  );
+};
+
+const Video = ({ image }) => {
+  return (
+    <a
+      href={image.src}
+      srl_video_thumbnail="/images/video-placeholder.jpeg"
+      srl_video_caption={image.explanation}
+      srl_video_scale="50"
+    >
+      <img
+        className="grid-item"
+        src="/images/video-placeholder.jpeg"
+        alt={`${image.title}-${image.date}`}
+      />
+    </a>
+  );
+};
+
+const Media = ({ image }) => {
+  if (image.media_type === "video") {
+    return <Video image={image} />;
+  } else {
+    return <Img image={image} />;
+  }
+};
+
+const GalleryImage = (props) => {
+  let imageTemplate = {};
+
+  if (props.galleryName === "mars-rover") {
+    imageTemplate = createMarsImage(props.image);
+  } else if (props.galleryName === "apod" || props.galleryName === "lucky") {
+    imageTemplate = createApodImage(props.image, props.hqImage);
+  } else {
+    imageTemplate = createDefaultImage(props.image);
+  }
+
+  return (
+    <div className="gallery-image-container">
+      <div
+        className="gallery-image"
+        data-media-id={imageTemplate.id}
+        data-media-src={imageTemplate.src}
+        data-media-alt={`${imageTemplate.title}-${imageTemplate.date}`}
+        data-media-title={imageTemplate.title}
+        data-media-date={imageTemplate.date}
+        data-media-type={imageTemplate.media_type}
+      >
+        <Media image={imageTemplate} />
+        <div className="image-info-container">
+          <div className="image-info-container--text">
+            <p>{imageTemplate.title}</p>
+            <p>Earth Date: {imageTemplate.date}</p>
+          </div>
+          <div className="image-info-container--like">
+            <LikeHeart
+              liked={props.liked}
+              likeImageClickHandler={props.likeImageClickHandler}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GalleryImage;

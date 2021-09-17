@@ -19,7 +19,6 @@ const Header = (props) => {
   }, [headerIsLoaded]);
 
   useEffect(() => {
-    console.log("Updated the Header Image");
     async function getImageOfTheDay() {
       try {
         const response = await fetch(
@@ -35,7 +34,9 @@ const Header = (props) => {
     }
     getImageOfTheDay().then((data) => {
       if (data !== undefined) {
-        setImageOfTheDay(data);
+        if (data.media_type !== "video") {
+          setImageOfTheDay(data);
+        }
         setHeaderIsLoaded(true);
       }
     });

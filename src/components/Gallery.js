@@ -1,20 +1,33 @@
 import "../css/Gallery.css";
-import GalleryImage from "./GaleryImage";
+import ReadyToRender from "./ReadyToRender";
+import SlideToggle from "./SlideToggle";
 import { useState, useEffect, useReducer } from "react";
+import useLocalStorageState from "../hooks/localStorageState";
 import Pagination from "react-pagination-js";
 import "react-pagination-js/dist/styles.css";
 import Select from "./Select";
-import { SRLWrapper } from "simple-react-lightbox-pro";
 import { useParams } from "react-router-dom";
 import Loading from "./Loading";
-import axios from "axios";
+import galleryUrls from "../data/galleryUrls";
+import {
+  client,
+  galleryNotLoaded,
+  galleryFetched,
+} from "../functions/galleryFunctions";
 
-const Gallery = ({ galleryUrls }) => {
+const Gallery = () => {
   console.log("Gallery Rendered");
+  const [faveGallery, setFaveGallery] = useLocalStorageState(
+    [],
+    "favorites-gallery"
+  );
+  const [faveIds, setFaveIds] = useLocalStorageState([], "favorites-ids");
+
   const params = useParams();
   const chosenGallery = galleryUrls[params.gallery.replace("-", "_")];
-  const [galleryUrl, setGalleryUrl] = useState(chosenGallery);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [galleryUrl, setGalleryUrl] = useState("");
+  const [hqImage, setHqImage] = useState(false);
+
   const [galleryState, setGalleryState] = useReducer(
     (galleryState, newState) => ({ ...galleryState, ...newState }),
     { images: [], current: [], total: 0 }
@@ -46,56 +59,49 @@ const Gallery = ({ galleryUrls }) => {
     },
   ];
 
-  useEffect(() => {}, []);
+  const showLoading = ["mars-rover", "apod", "lucky"];
+  const hasHiQualityImages = ["apod", "lucky"];
 
   useEffect(() => {
-    if (!isLoaded) {
-      console.log("Updated the Gallery");
+    setGalleryState({
+      images: [],
+      current: [],
+      total: 0,
+    });
+  }, [chosenGallery]);
+
+  useEffect(() => {
+    if (galleryUrl !== chosenGallery) {
+      setGalleryUrl(chosenGallery);
+      console.log("Fetching", chosenGallery);
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-      async function getTotalImages() {
-        try {
-          const response = await fetch(galleryUrl);
-          if (!response.ok) {
-            throw new Error(response.statusText);
+      if (params.gallery === "loved") {
+        galleryFetched(faveGallery, paginateState, setGalleryState);
+      } else if (chosenGallery !== "") {
+        galleryNotLoaded();
+        client.get(chosenGallery).then((data) => {
+          if (data !== undefined) {
+            galleryFetched(
+              data.photos ? data.photos : data,
+              paginateState,
+              setGalleryState
+            );
           }
-          return await response.json();
-        } catch (err) {
-          console.log(err);
-        }
+        });
       }
-      getTotalImages().then((data) => {
-        if (data !== undefined) {
-          let allImages = data.photos ? data.photos : data;
-          const startImg = (paginateState.page - 1) * paginateState.size;
-          const endImg = startImg + paginateState.size;
-          const currentImages = allImages.slice(startImg, endImg);
-
-          setGalleryState({
-            images: allImages,
-            current: currentImages,
-            total: allImages.length,
-          });
-          setIsLoaded(true);
-        }
-      });
     }
-  }, [galleryUrl, isLoaded, paginateState, chosenGallery]);
+  }, [galleryUrl, chosenGallery, params.gallery, paginateState, faveGallery]);
 
   useEffect(() => {
-    if (isLoaded) {
-      setTimeout(() => {
-        document.querySelector(".gallery-container").classList.remove("hide");
-        document
-          .querySelector(".gallery-pagination-controls--container")
-          .classList.remove("hide");
-      }, 500);
-    } else {
-      document.querySelector(".gallery-container").classList.add("hide");
-      document
-        .querySelector(".gallery-pagination-controls--container")
-        .classList.add("hide");
-    }
-  }, [isLoaded]);
+    window.localStorage.setItem("favorites-ids", JSON.stringify(faveIds));
+  }, [faveIds]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "favorites-gallery",
+      JSON.stringify(faveGallery)
+    );
+  }, [faveGallery]);
 
   const updateImages = (page, size) => {
     const startImg = (page - 1) * size;
@@ -114,28 +120,64 @@ const Gallery = ({ galleryUrls }) => {
     updateImages(page, paginateState.size);
   };
 
-  const checkGalleryUrl = () => {
-    if (galleryUrl !== chosenGallery) {
-      setGalleryUrl(chosenGallery);
-      setIsLoaded(false);
+  const highQualityImages = (e) => {
+    setHqImage(e.target.checked);
+  };
+
+  const checkIfEmpty = () => {
+    if (galleryState.total === 0 && params.gallery === "loved") {
+      return (
+        <div>
+          <span>Nothing to see here...</span>
+        </div>
+      );
     }
   };
-  checkGalleryUrl();
 
-  if (galleryState.current === "unloaded") {
-    return <div>No Images Found</div>;
-  }
+  const showLoadingAnimation = () => {
+    if (showLoading.includes(params.gallery)) {
+      return <Loading />;
+    }
+  };
+
+  const updateFave = (value, action) => {
+    if (action === "add") {
+      setFaveGallery([...faveGallery, value]);
+      setFaveIds([...faveIds, value.id]);
+    } else if (action === "remove") {
+      setFaveGallery(value.images);
+      setFaveIds(value.ids);
+    }
+  };
 
   return (
     <>
-      <Select onChange={selectNumImages} values={numberofImages} />
-      {isLoaded ? <Loading isLoading={"hide"} /> : <Loading isLoading={""} />}
-      <div className="gallery-container grid-container hide">
-        <SRLWrapper>
-          {galleryState.current.map((image, index) => (
-            <GalleryImage key={index} index={index} imageObj={image} />
-          ))}
-        </SRLWrapper>
+      <div className="filters-container">
+        <Select onChange={selectNumImages} values={numberofImages} />
+        {hasHiQualityImages.includes(params.gallery) && (
+          <SlideToggle
+            lText="Low"
+            rText="High"
+            eventHandler={highQualityImages}
+          />
+        )}
+      </div>
+      {checkIfEmpty()}
+      <div className="gallery-container grid-container">
+        {showLoadingAnimation()}
+        <div className="gallery-images-wrapper">
+          <ReadyToRender
+            galleryUrl={galleryUrl}
+            chosenGallery={chosenGallery}
+            galleryName={params.gallery}
+            hqImage={hqImage}
+            updateFave={updateFave}
+            faveGallery={faveGallery}
+            faveIds={faveIds}
+            currentGallery={galleryState.current}
+            setGalleryUrl={setGalleryUrl}
+          />
+        </div>
       </div>
       <div className="gallery-pagination-controls--container hide">
         <Pagination
