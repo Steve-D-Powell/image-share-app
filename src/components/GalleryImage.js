@@ -4,6 +4,7 @@ import {
   createApodImage,
   createDefaultImage,
 } from "../functions/createImages";
+import placeholder from "../images/video-placeholder.jpeg";
 
 const Img = ({ image }) => {
   return (
@@ -21,13 +22,13 @@ const Video = ({ image }) => {
   return (
     <a
       href={image.src}
-      srl_video_thumbnail="/images/video-placeholder.jpeg"
+      srl_video_thumbnail={placeholder}
       srl_video_caption={image.explanation}
       srl_video_scale="50"
     >
       <img
         className="grid-item"
-        src="/images/video-placeholder.jpeg"
+        src={placeholder}
         alt={`${image.title}-${image.date}`}
       />
     </a>

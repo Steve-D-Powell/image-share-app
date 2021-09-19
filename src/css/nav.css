@@ -1,0 +1,48 @@
+.main-nav--wrapper {
+  flex: 2;
+}
+.main-nav--links {
+  display: flex;
+}
+
+.nav-icon {
+  padding-right: 15px;
+}
+
+.main-nav--text {
+  font-family: var(--digital-font);
+  font-size: 0.7em;
+  display: flex;
+  margin-top: 15px;
+}
+
+.typing-text {
+  animation: typing 2s steps(22);
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 5px;
+}
+
+.blinking-cursor {
+  border-right: 3px solid;
+  animation: blink 0.5s step-end infinite alternate;
+  padding-left: 5px;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .main-nav--wrapper {
+    display: none;
+  }
+}

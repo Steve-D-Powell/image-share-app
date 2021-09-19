@@ -1,3 +1,16 @@
+const handleError = () => {
+  document.querySelector(".error-image").classList.remove("hide");
+  document.querySelector(".gallery-container.grid-container").style.display =
+    "flex";
+  document
+    .querySelector(".gallery-container.grid-container")
+    .classList.add("gallery-has-error");
+  document.querySelector(
+    ".gallery-container.grid-container"
+  ).style.justifyContent = "center";
+  document.querySelector(".gallery-loading-container").style.display = "none";
+};
+
 export async function client(endpoint, { body, ...customConfig } = {}) {
   const config = {
     method: "GET",
@@ -11,11 +24,13 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
   try {
     const response = await fetch(endpoint, config);
     if (!response.ok) {
+      handleError();
       throw new Error(response.statusText);
     }
     return await response.json();
   } catch (err) {
     console.log(err);
+    handleError();
   }
 }
 

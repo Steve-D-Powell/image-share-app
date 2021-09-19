@@ -1,55 +1,65 @@
-import React from "react";
-import "./css/App.css";
-import Header from "./components/Header";
+import React, { useEffect, useState, useMemo } from "react";
+import "./css/app.css";
 import Gallery from "./components/Gallery";
-import Navigation from "./components/Navigation";
 import Home from "./components/Home";
+import MobileNav from "./components/MobileNav";
 import { Route, HashRouter, Switch, Redirect } from "react-router-dom";
 
 function App() {
-  const links = [
-    {
-      link: "/",
-      path: "/",
-      name: "Home",
-      component: <Home />,
-      exact: true,
-    },
-    {
-      link: "/gallery/mars-rover",
-      path: "/gallery/:gallery",
-      name: "Mars Rover",
-      component: <Gallery />,
-      exact: false,
-    },
-    {
-      link: "/gallery/apod",
-      path: "/gallery/:gallery",
-      name: "APOD",
-      component: <Gallery />,
-      exact: false,
-    },
-    {
-      link: "/gallery/lucky",
-      path: "/gallery/:gallery",
-      name: "Feeling Lucky",
-      component: <Gallery />,
-      exact: false,
-    },
-    {
-      link: "/gallery/loved",
-      path: "/gallery/:gallery",
-      name: "Loved Pics",
-      component: <Gallery />,
-      exact: false,
-    },
-  ];
+  const [linkList, setLinkList] = useState([]);
+  const links = useMemo(
+    () => [
+      {
+        link: "/",
+        path: "/",
+        name: "Home",
+        component: <Home links={linkList} />,
+        exact: true,
+        hide: true,
+      },
+      {
+        link: "/gallery/mars-rover",
+        path: "/gallery/:gallery",
+        name: "Mars Rover Gallery",
+        component: <Gallery links={linkList} />,
+        exact: false,
+        hide: false,
+      },
+      {
+        link: "/gallery/apod",
+        path: "/gallery/:gallery",
+        name: "Pic of the Day Gallery",
+        component: <Gallery links={linkList} />,
+        exact: false,
+        hide: false,
+      },
+      {
+        link: "/gallery/lucky",
+        path: "/gallery/:gallery",
+        name: "Feeling Lucky Gallery",
+        component: <Gallery links={linkList} />,
+        exact: false,
+        hide: false,
+      },
+      {
+        link: "/gallery/loved",
+        path: "/gallery/:gallery",
+        name: "Liked Gallery",
+        component: <Gallery links={linkList} />,
+        exact: false,
+        hide: false,
+      },
+    ],
+    [linkList]
+  );
+
+  useEffect(() => {
+    setLinkList(links);
+  }, []);
 
   return (
     <div className="App">
-      <Header />
       <HashRouter>
-        <Navigation links={links} />
         <Switch>
           {links.map((obj, index) => {
             return obj.exact ? (
@@ -65,6 +75,7 @@ function App() {
           <Redirect to="/" />
         </Switch>
       </HashRouter>
+      <MobileNav />
     </div>
   );
 }

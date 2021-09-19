@@ -1,14 +1,14 @@
-.filters-container {
+.header-container {
   display: flex;
-  width: 80%;
-  margin: 45px auto;
+  width: 90%;
+  margin: 15px auto;
   justify-content: space-between;
 }
 
 .grid-container {
   columns: 3 200px;
   column-gap: 0.5rem;
-  width: 80%;
+  width: 90%;
   margin: 20px auto;
 }
 .grid-container .gallery-image-container {
@@ -49,9 +49,28 @@
   position: relative;
 }
 
+.no-likes-container {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  flex-direction: column;
+}
+
+.no-likes-container span {
+  font-family: var(--digital-font);
+}
+
 @media only screen and (max-width: 425px) {
   .grid-container .gallery-image-container {
     margin: 0 0.5rem 0.8rem 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .header-container {
+    margin-bottom: 30px;
   }
 }
 
