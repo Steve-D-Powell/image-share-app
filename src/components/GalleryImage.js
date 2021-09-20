@@ -4,14 +4,16 @@ import {
   createApodImage,
   createDefaultImage,
 } from "../functions/createImages";
+import placeholder from "../images/video-placeholder.jpeg";
 
 const Img = ({ image }) => {
   return (
-    <a href={image.src}>
+    <a href={image.src} tabIndex="-1">
       <img
         className="grid-item"
         src={image.src}
         alt={`${image.title}-${image.date}`}
+        tabIndex="0"
       />
     </a>
   );
@@ -21,14 +23,16 @@ const Video = ({ image }) => {
   return (
     <a
       href={image.src}
-      srl_video_thumbnail="/images/video-placeholder.jpeg"
+      srl_video_thumbnail={placeholder}
       srl_video_caption={image.explanation}
       srl_video_scale="50"
+      tabIndex="-1"
     >
       <img
         className="grid-item"
-        src="/images/video-placeholder.jpeg"
+        src={placeholder}
         alt={`${image.title}-${image.date}`}
+        tabIndex="0"
       />
     </a>
   );

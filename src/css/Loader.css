@@ -1,20 +1,31 @@
 .gallery-pagination-controls--container {
   padding: 30px 0;
+  background-color: var(--bg-colour);
 }
 
 .gallery-loading-container {
   position: absolute;
-  width: 81%;
+  width: 90%;
   transition: all 1s;
   padding: 0;
+  z-index: 2;
 }
 
 @media only screen and (min-width: 768px) {
   .gallery-loading-container {
-    width: 81%;
-    background-color: #f0f0f0;
-    z-index: 2;
+    width: 90%;
+    background-color: var(--bg-colour);
   }
+}
+
+.gallery-loading-container.home {
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-colour);
+}
+
+.gallery-loading-container.home .overlay {
+  justify-content: center;
 }
 
 .loading-text {

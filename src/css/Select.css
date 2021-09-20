@@ -1,5 +1,6 @@
 .images-selecter--container {
-  display: flex;
+  padding-right: 25px;
+  margin-top: 4px;
 }
 .images-selecter--select {
   -webkit-appearance: none;
@@ -8,8 +9,8 @@
   border: 0;
   outline: 0;
   font: inherit;
-  width: 10em;
-  height: 3em;
+  width: 6em;
+  height: 32px;
   padding: 0 4em 0 1em;
   background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg)
       no-repeat right 0.8em center/1.4em,

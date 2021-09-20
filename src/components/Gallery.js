@@ -1,4 +1,4 @@
-import "../css/Gallery.css";
+import "../css/gallery.css";
 import ReadyToRender from "./ReadyToRender";
 import SlideToggle from "./SlideToggle";
 import { useState, useEffect, useReducer } from "react";
@@ -8,14 +8,17 @@ import "react-pagination-js/dist/styles.css";
 import Select from "./Select";
 import { useParams } from "react-router-dom";
 import Loading from "./Loading";
+import Navigation from "./Navigation";
 import galleryUrls from "../data/galleryUrls";
 import {
   client,
   galleryNotLoaded,
   galleryFetched,
 } from "../functions/galleryFunctions";
+import errorImage from "../images/problemMeme.jpeg";
+import sadAstro from "../images/sadAstro.png";
 
-const Gallery = () => {
+const Gallery = (props) => {
   console.log("Gallery Rendered");
   const [faveGallery, setFaveGallery] = useLocalStorageState(
     [],
@@ -38,23 +41,23 @@ const Gallery = () => {
   );
   const numberofImages = [
     {
-      name: "10 Images",
+      name: "10",
       value: "10",
     },
     {
-      name: "20 Images",
+      name: "20",
       value: "20",
     },
     {
-      name: "30 Images",
+      name: "30",
       value: "30",
     },
     {
-      name: "40 Images",
+      name: "40",
       value: "40",
     },
     {
-      name: "50 Images",
+      name: "50",
       value: "50",
     },
   ];
@@ -74,7 +77,7 @@ const Gallery = () => {
     if (galleryUrl !== chosenGallery) {
       setGalleryUrl(chosenGallery);
       console.log("Fetching", chosenGallery);
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+
       if (params.gallery === "loved") {
         galleryFetched(faveGallery, paginateState, setGalleryState);
       } else if (chosenGallery !== "") {
@@ -127,8 +130,9 @@ const Gallery = () => {
   const checkIfEmpty = () => {
     if (galleryState.total === 0 && params.gallery === "loved") {
       return (
-        <div>
-          <span>Nothing to see here...</span>
+        <div className="no-likes-container">
+          <span>You havn't liked any images yet...</span>
+          <img width="400px" src={sadAstro} alt="Sad Astro" />
         </div>
       );
     }
@@ -152,7 +156,8 @@ const Gallery = () => {
 
   return (
     <>
-      <div className="filters-container">
+      <div className="header-container">
+        <Navigation links={props.links} />
         <Select onChange={selectNumImages} values={numberofImages} />
         {hasHiQualityImages.includes(params.gallery) && (
           <SlideToggle
@@ -165,6 +170,12 @@ const Gallery = () => {
       {checkIfEmpty()}
       <div className="gallery-container grid-container">
         {showLoadingAnimation()}
+        <div className="error-image hide" style={{ maxWidth: "500px" }}>
+          <img src={errorImage} alt="error" style={{ marginBottom: "20px" }} />
+          <span>Uh oh... Looks like we couldn't get the images from NASA.</span>
+          <br />
+          <span> Please try refreshing the page, or trying again later.</span>
+        </div>
         <div className="gallery-images-wrapper">
           <ReadyToRender
             galleryUrl={galleryUrl}

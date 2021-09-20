@@ -1,8 +1,9 @@
-import "../css/Loader.css";
+import "../css/loader.css";
 
-const Loading = ({ isLoading }) => {
+const Loading = ({ isLoading, homeLoading }) => {
+  const classCheck = homeLoading !== undefined ? "home" : "";
   return (
-    <div className="gallery-loading-container">
+    <div className={`gallery-loading-container ${classCheck}`}>
       <div className="overlay">
         <span className="loader">
           <span className="loader__rocket">

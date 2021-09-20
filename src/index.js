@@ -2,14 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import LoadingScreen from "./components/LoadingScreen";
 import reportWebVitals from "./reportWebVitals";
 import SimpleReactLightbox from "simple-react-lightbox-pro";
 
 function WrappedApp() {
   return (
     <SimpleReactLightbox>
-      <LoadingScreen />
       <App />
     </SimpleReactLightbox>
   );

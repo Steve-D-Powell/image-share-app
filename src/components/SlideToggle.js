@@ -1,9 +1,8 @@
-import "../css/SlideToggle.css";
+import "../css/slideToggle.css";
 
 const SlideToggle = ({ lText, rText, eventHandler }) => {
   return (
     <div className="switch-button-container">
-      <span className="switch-title">Image Quality</span>
       <div className="switch-button" data-right-text={rText}>
         <input
           id="High-quality-images"
@@ -15,6 +14,7 @@ const SlideToggle = ({ lText, rText, eventHandler }) => {
           <span className="switch-button-label-span">{lText}</span>
         </label>
       </div>
+      <span className="switch-title">IMAGE QUALITY</span>
     </div>
   );
 };
