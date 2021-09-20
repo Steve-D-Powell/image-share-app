@@ -171,11 +171,7 @@ const Gallery = (props) => {
       <div className="gallery-container grid-container">
         {showLoadingAnimation()}
         <div className="error-image hide" style={{ maxWidth: "500px" }}>
-          <img
-            src={errorImage}
-            alt="error image"
-            style={{ marginBottom: "20px" }}
-          />
+          <img src={errorImage} alt="error" style={{ marginBottom: "20px" }} />
           <span>Uh oh... Looks like we couldn't get the images from NASA.</span>
           <br />
           <span> Please try refreshing the page, or trying again later.</span>

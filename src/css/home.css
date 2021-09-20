@@ -68,7 +68,8 @@
 
 @media only screen and (max-width: 768px) {
   .home-image-container {
-    min-width: 90%;
+    max-width: 90%;
+    margin-top: 0;
   }
 
   .home-image-container--text-container {
@@ -90,8 +91,8 @@
 
   .home-image-container--text-container_note {
     position: relative;
-    top: 0;
-    margin-top: -25px;
+    bottom: 0;
+    margin: 3px 0 0 10px;
   }
 }
 

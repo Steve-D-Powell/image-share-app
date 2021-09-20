@@ -17,7 +17,7 @@
 }
 
 .typing-text {
-  animation: typing 2s steps(22);
+  animation: typing 1s steps(22);
   white-space: nowrap;
   overflow: hidden;
   padding-left: 5px;

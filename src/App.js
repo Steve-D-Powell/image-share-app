@@ -74,8 +74,8 @@ function App() {
           })}
           <Redirect to="/" />
         </Switch>
+        <MobileNav links={linkList} />
       </HashRouter>
-      <MobileNav />
     </div>
   );
 }
