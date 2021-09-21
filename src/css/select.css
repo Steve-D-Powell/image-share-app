@@ -11,7 +11,7 @@
   font: inherit;
   width: 6em;
   height: 32px;
-  padding: 0 4em 0 1em;
+  padding: 0 3em 0 1em;
   background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg)
       no-repeat right 0.8em center/1.4em,
     linear-gradient(to left, rgba(0, 0, 0, 0.8) 3em, rgba(0, 0, 0, 0.5) 3em);

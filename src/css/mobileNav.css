@@ -55,13 +55,38 @@
 .close-mobile-nav {
   margin-top: 25px;
   font-family: var(--digital-font);
-  font-size: 1.5rem;
+  font-size: 0.8rem;
+  left: -50px;
+  position: relative;
+  border-bottom: 1px solid black;
 }
 .rocket-icon {
   width: 75px;
   height: 75px;
   position: absolute;
-  top: -75px;
+  top: -72px;
+  z-index: 2;
+}
+.rocket-icon.hidden {
+  top: 0px;
+}
+.rocket-icon.bounce {
+  animation: bounce 0.8s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}
+@media only screen and (min-width: 1441px) {
+  .rocket-icon {
+    top: -92px;
+  }
+}
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
 }
 .rocket-smoke {
   margin-bottom: -5px;
@@ -122,11 +147,14 @@
   display: flex;
   align-items: center;
 }
+.mobile-nav--content .nav-links-title {
+  display: none;
+}
 .mobile-nav--content .nav-icon {
   display: flex;
   align-items: center;
 }
-.mobile-nav--content .nav-icon img {
+.nav-icon--wrapper {
   padding: 20px 25px 20px 0;
 }
 .mobile-nav--content .nav-icon span {

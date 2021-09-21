@@ -3,6 +3,7 @@ import Navigation from "./Navigation";
 import "../css/home.css";
 import starsImg from "../images/stars.jpg";
 import Loading from "./Loading";
+import nasaLogo from "../images/nasa-logo.png";
 
 const Home = ({ links }) => {
   const [imageOfTheDay, setImageOfTheDay] = useState({
@@ -44,7 +45,6 @@ const Home = ({ links }) => {
     }
     getImageOfTheDay().then((data) => {
       if (data !== undefined) {
-        console.log("Home Image Fetched");
         if (data.media_type !== "video") {
           setImageOfTheDay(data);
         }
@@ -66,6 +66,11 @@ const Home = ({ links }) => {
       <Loading homeLoading="home" />
       <div className="main-nav--container">
         <Navigation links={links} />
+        <div className="main-nav--logo">
+          <span className="left-text">Images from Space</span>
+          <img src={nasaLogo} width="100px" />
+          <span className="right-text">Images from Space</span>
+        </div>
       </div>
       <div className="home-image-container" style={styles.headerHero}>
         <div className="home-image-container--text-container_note">

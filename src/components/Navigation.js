@@ -2,11 +2,13 @@ import NavLinks from "./NavLinks";
 import "../css/nav.css";
 
 const Navigation = ({ links }) => {
-  console.log("Nav Rendered");
-
   return (
     <div className="main-nav--wrapper">
-      <NavLinks links={links} menuClass="main-nav--links" isMobile={false} />
+      <NavLinks
+        links={links}
+        menuClass="main-nav--links navigation-links"
+        isMobile={false}
+      />
       <div className="main-nav--text">
         <span>Destination:</span>
         <div

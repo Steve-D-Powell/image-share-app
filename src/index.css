@@ -39,3 +39,8 @@ code {
 .ghost {
   opacity: 0;
 }
+
+.disabled-link,
+.nav-link-selected {
+  pointer-events: none;
+}
