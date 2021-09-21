@@ -1,7 +1,6 @@
 .home-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   height: 100%;
 }
@@ -114,4 +113,35 @@
   text-align: left;
   width: 90%;
   margin-top: 15px;
+  display: flex;
+}
+
+@media only screen and (max-width: 768px) {
+  .main-nav--container {
+    margin-top: 0;
+  }
+}
+
+.main-nav--logo {
+  font-family: var(--space-font);
+}
+
+.main-nav--logo img {
+  top: 35px;
+  position: relative;
+  z-index: 2;
+}
+
+.main-nav--logo .right-text {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .main-nav--logo .right-text {
+    display: inline;
+  }
+
+  .main-nav--logo .left-text {
+    display: none;
+  }
 }

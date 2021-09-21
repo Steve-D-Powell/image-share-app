@@ -19,7 +19,6 @@ import errorImage from "../images/problemMeme.jpeg";
 import sadAstro from "../images/sadAstro.png";
 
 const Gallery = (props) => {
-  console.log("Gallery Rendered");
   const [faveGallery, setFaveGallery] = useLocalStorageState(
     [],
     "favorites-gallery"
@@ -76,15 +75,21 @@ const Gallery = (props) => {
   useEffect(() => {
     if (galleryUrl !== chosenGallery) {
       setGalleryUrl(chosenGallery);
-      console.log("Fetching", chosenGallery);
 
       if (params.gallery === "loved") {
-        galleryFetched(faveGallery, paginateState, setGalleryState);
+        galleryNotLoaded();
+        galleryFetched(
+          params.gallery,
+          faveGallery,
+          paginateState,
+          setGalleryState
+        );
       } else if (chosenGallery !== "") {
         galleryNotLoaded();
         client.get(chosenGallery).then((data) => {
           if (data !== undefined) {
             galleryFetched(
+              params.gallery,
               data.photos ? data.photos : data,
               paginateState,
               setGalleryState

@@ -4,8 +4,10 @@ import rocketClouds from "../images/rocketClouds.png";
 import rocketCloudsMedium from "../images/rocketCloudsMedium.png";
 import rocketCloudsSmall from "../images/rocketCloudsSmall.png";
 import rocketIcon from "../images/rocketIcon.png";
+import useLocalStorageState from "../hooks/localStorageState";
 
 const MobileNav = ({ links }) => {
+  const [bounce, setBounce] = useLocalStorageState("bounce", "rocket-bounce");
   const openMenu = (menu) => {
     menu.classList.add("open");
     document.body.style.overflow = "hidden";
@@ -28,6 +30,7 @@ const MobileNav = ({ links }) => {
   const clickHandler = () => {
     const menu = document.querySelector(".mobile-nav--container");
     const menuOpen = document.querySelector(".mobile-nav--container.open");
+    setBounce("", "rocket-bounce");
     menu.style.height = "menuHeight";
     menuOpen === null ? openMenu(menu) : closeMenu(menu);
   };
@@ -46,20 +49,18 @@ const MobileNav = ({ links }) => {
         alt="rocket clouds"
       />
       <div className="mobile-nav--container__inner">
-        <div className="rocket-icon" onClick={clickHandler}>
+        <div className={`rocket-icon ${bounce}`} onClick={clickHandler}>
           <img src={rocketIcon} alt="Rocket Icon" width="75px" />
         </div>
         <div className="mobile-nav--content">
           <NavLinks
             links={links}
-            menuClass="mobile-nav--links"
+            menuClass="mobile-nav--links navigation-links"
             isMobile={true}
             closeMenu={closeMenu}
+            clickXhandler={clickHandler}
           />
         </div>
-        <span className="close-mobile-nav" onClick={clickHandler}>
-          X
-        </span>
       </div>
     </div>
   );

@@ -40,9 +40,9 @@ client.get = function (endpoint, customConfig = {}) {
 
 export function galleryIsLoaded() {
   const loadingNode = document.querySelector(".gallery-loading-container");
+
   if (loadingNode) {
     loadingNode.addEventListener("transitionend", () => {
-      console.log("After");
       loadingNode.style.display = "none";
     });
   }
@@ -55,6 +55,9 @@ export function galleryIsLoaded() {
       .querySelector(".gallery-pagination-controls--container")
       .classList.remove("hide");
   }, 1500);
+  setTimeout(() => {
+    document.querySelector(".rocket-icon").classList.remove("hidden");
+  }, 1000);
 }
 
 export function galleryNotLoaded() {
@@ -70,7 +73,12 @@ export function galleryNotLoaded() {
     .classList.add("hide");
 }
 
-export function galleryFetched(images, paginateState, setGalleryState) {
+export function galleryFetched(
+  galleryName,
+  images,
+  paginateState,
+  setGalleryState
+) {
   const startImg = (paginateState.page - 1) * paginateState.size;
   const endImg = startImg + paginateState.size;
   const currentImages = images.slice(startImg, endImg);
@@ -80,7 +88,7 @@ export function galleryFetched(images, paginateState, setGalleryState) {
     current: currentImages,
     total: images.length,
   });
-  if (images.length > 0) {
+  if (images.length > 0 || galleryName === "loved") {
     galleryIsLoaded();
   } else {
     galleryNotLoaded();
