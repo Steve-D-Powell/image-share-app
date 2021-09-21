@@ -1,0 +1,32 @@
+.images-selecter--container {
+  padding-right: 25px;
+  margin-top: 4px;
+}
+.images-selecter--select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  width: 6em;
+  height: 32px;
+  padding: 0 3em 0 1em;
+  background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg)
+      no-repeat right 0.8em center/1.4em,
+    linear-gradient(to left, rgba(0, 0, 0, 0.8) 3em, rgba(0, 0, 0, 0.5) 3em);
+  color: white;
+  border-radius: 0.25em;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+.images-selecter--select option {
+  color: inherit;
+  background-color: #320a28;
+}
+.images-selecter--select:focus {
+  outline: none;
+}
+.images-selecter--select::-ms-expand {
+  display: none;
+}

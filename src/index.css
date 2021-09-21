@@ -1,0 +1,46 @@
+@font-face {
+  font-family: OuterLimits;
+  src: url("./fonts/SFOuterLimitsExtUpright.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: MineCart;
+  src: url("./fonts/MinecartLCD.ttf") format("truetype");
+}
+
+:root {
+  --space-font: OuterLimits;
+  --digital-font: MineCart;
+  --bg-colour: #f0f0f0;
+}
+
+html {
+  background-color: var(--bg-colour);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.hide {
+  display: none;
+}
+
+.ghost {
+  opacity: 0;
+}
+
+.disabled-link,
+.nav-link-selected {
+  pointer-events: none;
+}
