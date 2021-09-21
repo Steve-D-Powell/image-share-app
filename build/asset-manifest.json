@@ -1,0 +1,39 @@
+{
+  "files": {
+    "main.css": "/image-share-app/static/css/main.6d255424.chunk.css",
+    "main.js": "/image-share-app/static/js/main.a910210f.chunk.js",
+    "main.js.map": "/image-share-app/static/js/main.a910210f.chunk.js.map",
+    "runtime-main.js": "/image-share-app/static/js/runtime-main.1e3b3878.js",
+    "runtime-main.js.map": "/image-share-app/static/js/runtime-main.1e3b3878.js.map",
+    "static/css/2.33ae8fe3.chunk.css": "/image-share-app/static/css/2.33ae8fe3.chunk.css",
+    "static/js/2.31945c40.chunk.js": "/image-share-app/static/js/2.31945c40.chunk.js",
+    "static/js/2.31945c40.chunk.js.map": "/image-share-app/static/js/2.31945c40.chunk.js.map",
+    "static/js/3.31d225f0.chunk.js": "/image-share-app/static/js/3.31d225f0.chunk.js",
+    "static/js/3.31d225f0.chunk.js.map": "/image-share-app/static/js/3.31d225f0.chunk.js.map",
+    "index.html": "/image-share-app/index.html",
+    "static/css/2.33ae8fe3.chunk.css.map": "/image-share-app/static/css/2.33ae8fe3.chunk.css.map",
+    "static/css/main.6d255424.chunk.css.map": "/image-share-app/static/css/main.6d255424.chunk.css.map",
+    "static/js/2.31945c40.chunk.js.LICENSE.txt": "/image-share-app/static/js/2.31945c40.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/image-share-app/static/media/SFOuterLimitsExtUpright.0b22bdde.ttf",
+    "static/media/apodNavIcon.e3034ac5.png": "/image-share-app/static/media/apodNavIcon.e3034ac5.png",
+    "static/media/likesNavIcon.2140ec4e.png": "/image-share-app/static/media/likesNavIcon.2140ec4e.png",
+    "static/media/luckyNavIcon.678d5bdd.png": "/image-share-app/static/media/luckyNavIcon.678d5bdd.png",
+    "static/media/marsNavIcon.18723d95.png": "/image-share-app/static/media/marsNavIcon.18723d95.png",
+    "static/media/nasa-logo.66b5d266.png": "/image-share-app/static/media/nasa-logo.66b5d266.png",
+    "static/media/problemMeme.d7816721.jpeg": "/image-share-app/static/media/problemMeme.d7816721.jpeg",
+    "static/media/rocketClouds.7606e7b9.png": "/image-share-app/static/media/rocketClouds.7606e7b9.png",
+    "static/media/rocketCloudsMedium.02153f47.png": "/image-share-app/static/media/rocketCloudsMedium.02153f47.png",
+    "static/media/rocketCloudsSmall.54bb616f.png": "/image-share-app/static/media/rocketCloudsSmall.54bb616f.png",
+    "static/media/rocketIcon.05756297.png": "/image-share-app/static/media/rocketIcon.05756297.png",
+    "static/media/sadAstro.4501bb2c.png": "/image-share-app/static/media/sadAstro.4501bb2c.png",
+    "static/media/stars.c4d6e46f.jpg": "/image-share-app/static/media/stars.c4d6e46f.jpg",
+    "static/media/video-placeholder.6207ad47.jpeg": "/image-share-app/static/media/video-placeholder.6207ad47.jpeg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1e3b3878.js",
+    "static/css/2.33ae8fe3.chunk.css",
+    "static/js/2.31945c40.chunk.js",
+    "static/css/main.6d255424.chunk.css",
+    "static/js/main.a910210f.chunk.js"
+  ]
+}
